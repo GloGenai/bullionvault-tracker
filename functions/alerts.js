@@ -22,7 +22,7 @@ exports.handler = async function(event, context) {
   try {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
-      to: 'glogenai2009@gmail.com',
+      to: 'process.env.EMAIL_USER',
       subject: `BullionVault Alert - ${profitPercentage}% threshold reached`,
       text: `Your ${position.metal} position in ${position.location} (${position.quantity}kg) has reached ${profitPercentage}% profit
 Purchase price: ${position.purchasePrice}€
