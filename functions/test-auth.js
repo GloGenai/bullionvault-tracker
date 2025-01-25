@@ -1,3 +1,4 @@
+import fetch from 'node-fetch';
 // Test BullionVault authentication
 exports.handler = async function() {
   try {
