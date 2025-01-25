@@ -1,3 +1,4 @@
+// Test BullionVault authentication
 exports.handler = async function() {
   try {
     const response = await fetch('https://api.bullionvault.com/v2/authenticate', {
