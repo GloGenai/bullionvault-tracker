@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 exports.handler = async function() {
   try {
-    const response = await fetch('https://api.bullionvault.com/v2/authenticate', {
+    const response = await fetch('https://live.bullionvault.com/secure/api/v2/authenticate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
