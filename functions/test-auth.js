@@ -1,5 +1,5 @@
-import fetch from 'node-fetch';
-// Test BullionVault authentication
+const fetch = require('node-fetch');
+
 exports.handler = async function() {
   try {
     const response = await fetch('https://api.bullionvault.com/v2/authenticate', {
