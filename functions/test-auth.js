@@ -10,8 +10,19 @@ exports.handler = async function() {
         password: process.env.BULLIONVAULT_PASSWORD
       })
     });
-    const data = await response.json();
-    return { statusCode: 200, body: JSON.stringify(data) };
+
+    const responseText = await response.text();
+    console.log('Response status:', response.status);
+    console.log('Response headers:', response.headers.raw());
+    console.log('Response text:', responseText);
+
+    return { 
+      statusCode: 200, 
+      body: JSON.stringify({
+        status: response.status,
+        text: responseText
+      })
+    };
   } catch (error) {
     return { statusCode: 500, body: JSON.stringify({error: error.message}) };
   }
