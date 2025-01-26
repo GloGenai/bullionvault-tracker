@@ -1,19 +1,32 @@
-// functions/market-data.js
-const fetch = require('node-fetch');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 exports.handler = async function(event, context) {
   try {
-    // Login to BullionVault
-   const authResponse = await fetch('https://live.bullionvault.com/secure/api/v2/authenticate', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    username: process.env.BULLIONVAULT_USERNAME,
-    password: process.env.BULLIONVAULT_PASSWORD
-  })
-});
-const authData = await authResponse.json();
+    // Step 1: Login
+    const loginResponse = await fetch('https://www.bullionvault.com/secure/j_security_check', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `j_username=${process.env.BULLIONVAULT_USERNAME}&j_password=${process.env.BULLIONVAULT_PASSWORD}`,
+    });
 
+    // Step 2: Store cookies
+    const cookies = loginResponse.headers.get('set-cookie');
+    console.log('Auth status:', loginResponse.status);
+    console.log('Cookies:', cookies);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ status: loginResponse.status })
+    };
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: error.message })
+    };
+  }
+}
     // Fetch market data
     const marketResponse = await fetch('https://www.bullionvault.com/secure/api/v2/view_market_xml.do?considerationCurrency=EUR&marketWidth=1', {
       headers: {
