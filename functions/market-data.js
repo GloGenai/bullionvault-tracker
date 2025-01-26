@@ -3,7 +3,6 @@ import fetch from 'node-fetch';
 exports.handler = async function(event, context) {
   try {
     // Step 1: Initial login 
-    console.log('Starting login...');
     const loginResponse = await fetch('https://www.bullionvault.com/secure/j_security_check', {
       method: 'POST',
       headers: {
@@ -22,9 +21,17 @@ exports.handler = async function(event, context) {
       const sessionCookie = loginResponse.headers.get('set-cookie');
       console.log('Session cookie:', sessionCookie);
 
+      // Step 2: Get market data
+      const marketResponse = await fetch('https://www.bullionvault.com/secure/api/v2/view_market_xml.do?considerationCurrency=EUR', {
+        headers: {
+          'Cookie': sessionCookie
+        }
+      });
+
+      const data = await marketResponse.text();
       return {
         statusCode: 200,
-        body: JSON.stringify({ status: 'Login successful' })
+        body: JSON.stringify({ data })
       };
     }
 
@@ -34,9 +41,8 @@ exports.handler = async function(event, context) {
     };
 
   } catch (error) {
-    console.error('Error:', error);
     return {
-      statusCode: 500, 
+      statusCode: 500,
       body: JSON.stringify({ error: error.message })
     };
   }
